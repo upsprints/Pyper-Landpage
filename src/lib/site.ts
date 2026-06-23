@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 
 export const siteConfig = {
   name: "Pyper",
@@ -58,7 +57,7 @@ export const siteMetadata = {
     "Centralize atendimentos, organize leads e automatize processos comerciais com agentes de IA integrados ao WhatsApp.",
   imageAlt: "Dashboard da Pyper com CRM, WhatsApp e agentes de IA",
 } as const satisfies {
-  title: Metadata["title"];
+  title: string;
   description: string;
   keywords: readonly string[];
   openGraphTitle: string;

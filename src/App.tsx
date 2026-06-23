@@ -1,6 +1,6 @@
-import Image from "next/image";
+
 import type { ReactNode } from "react";
-import { KanbanWorkspaceClient } from "../components/KanbanWorkspaceClient";
+import { KanbanWorkspaceClient } from "./components/KanbanWorkspaceClient";
 import {
   ArrowRight,
   BellRing,
@@ -204,13 +204,13 @@ export default function Home() {
       <header className="site-nav" aria-label="Navegação principal">
         <div className="site-shell nav-row">
           <a className="brand-link" href="#inicio" aria-label="Pyper">
-            <Image
+            <img
               className="brand-wordmark"
               src={siteConfig.logo.src}
               alt={siteConfig.logo.alt}
               width={siteConfig.logo.width}
               height={siteConfig.logo.height}
-              priority
+              
             />
           </a>
 
@@ -285,15 +285,15 @@ export default function Home() {
 
             <figure className="hero-product" aria-label="Interface da Pyper">
               <div className="hero-product-frame">
-                <Image
+                <img
                   className="hero-dashboard-image"
                   src={heroDashboard.src}
                   alt={heroDashboard.alt}
                   width={heroDashboard.width}
                   height={heroDashboard.height}
-                  priority
-                  quality={100}
-                  unoptimized
+                  
+                  
+                  
                   sizes="(max-width: 980px) 100vw, 68vw"
                 />
               </div>
@@ -447,7 +447,7 @@ export default function Home() {
         <section className="section final-cta">
           <div className="site-shell">
             <div className="final-card">
-              <Image
+              <img
                 className="final-logo"
                 src={siteConfig.logo.src}
                 alt={siteConfig.logo.alt}
@@ -480,7 +480,7 @@ export default function Home() {
       <footer className="footer">
         <div className="site-shell footer-row">
           <div className="footer-brand">
-            <Image
+            <img
               className="brand-wordmark muted"
               src={siteConfig.logo.src}
               alt={siteConfig.logo.alt}
@@ -529,7 +529,7 @@ function WorkspaceBuilderMockup() {
       <div className="workspace-decoration paper-plane" aria-hidden="true" />
       <div className="workspace-decoration cloud" aria-hidden="true" />
 
-      <Image
+      <img
         className="workspace-builder-logo"
         src={siteConfig.logo.src}
         alt=""
