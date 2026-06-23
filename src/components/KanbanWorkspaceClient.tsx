@@ -15,18 +15,42 @@ import {
   Play,
   CheckCircle2,
   AlertTriangle,
-  MessageCircle
+  MessageCircle,
+  Bot
 } from "lucide-react";
-import Image from "next/image";
+
+interface PipelineStage {
+  readonly title: string;
+  readonly count: string | number;
+}
+
+interface KanbanCard {
+  readonly stage: string;
+  readonly id: string;
+  readonly name: string;
+  readonly tag: string;
+  readonly meta: string;
+  readonly tone: string;
+  readonly featured: boolean;
+}
+
+const getPhoneForCard = (id: string) => {
+  const numPart = id.replace(/\D/g, "");
+  const val = numPart ? parseInt(numPart, 10) : 46;
+  const ddd = [11, 21, 31, 41, 51, 81, 85, 19, 27][val % 9];
+  const p1 = 98000 + (val * 17) % 2000;
+  const p2 = 1000 + (val * 31) % 9000;
+  return `+55 ${ddd} ${p1}-${p2}`;
+};
 
 export function KanbanWorkspaceClient({
   pipelineStages,
   kanbanCards,
 }: {
-  pipelineStages: any[];
-  kanbanCards: any[];
+  readonly pipelineStages: readonly PipelineStage[];
+  readonly kanbanCards: readonly KanbanCard[];
 }) {
-  const [selectedCard, setSelectedCard] = useState<any>(null);
+  const [selectedCard, setSelectedCard] = useState<KanbanCard | null>(null);
 
   // Add more mock cards to make it fuller
   const extendedCards = [
@@ -137,31 +161,10 @@ export function KanbanWorkspaceClient({
         <div 
           className="modal-overlay" 
           onClick={() => setSelectedCard(null)}
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-            padding: '20px'
-          }}
         >
           <div 
             className="modal-content" 
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: '#f8faf9',
-              borderRadius: '12px',
-              width: '100%',
-              maxWidth: '900px',
-              maxHeight: '90vh',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-            }}
           >
             {/* Modal Header */}
             <header style={{
@@ -189,9 +192,9 @@ export function KanbanWorkspaceClient({
               </div>
             </header>
 
-            <div style={{ padding: '24px', display: 'flex', gap: '24px', overflowY: 'auto', background: '#f8faf9', flex: 1 }}>
+            <div className="modal-body">
               {/* Left Column (Main Form) */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="modal-main">
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                   <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '24px', padding: '6px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ color: 'white', background: '#3b82f6', borderRadius: '50%', width: '20px', height: '20px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 'bold' }}>P</span>
@@ -203,16 +206,16 @@ export function KanbanWorkspaceClient({
                 </div>
 
                 {/* Tabs */}
-                <div style={{ display: 'flex', gap: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '0', marginTop: '8px', fontSize: '13px', color: 'var(--muted)' }}>
-                  <span style={{ color: 'black', fontWeight: 'bold', borderBottom: '2px solid black', paddingBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div className="modal-tabs">
+                  <span className="active">
                     <FileText size={14} /> Dados do Form...
                   </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}><MessageCircle size={14} /> Atendimento</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}>Pedidos</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}>Propostas & Co...</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}>Comentários</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}>Anexos(0)</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingBottom: '12px' }}>Mais ⌄</span>
+                  <span><MessageCircle size={14} /> Atendimento</span>
+                  <span>Pedidos</span>
+                  <span>Propostas & Co...</span>
+                  <span>Comentários</span>
+                  <span>Anexos(0)</span>
+                  <span>Mais ⌄</span>
                 </div>
 
                 {/* AI Notification Box */}
@@ -226,7 +229,7 @@ export function KanbanWorkspaceClient({
                       <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>Cliente</div>
                       <div style={{ fontSize: '13px', fontWeight: 'bold' }}>{selectedCard.name.split(' | ')[0]}</div>
                       <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '4px' }}>Telefone</div>
-                      <div style={{ fontSize: '13px' }}>+55 85 98871-8442</div>
+                      <div style={{ fontSize: '13px' }}>{getPhoneForCard(selectedCard.id)}</div>
                     </div>
                     <button style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: '24px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <CheckCircle2 size={14} /> Vincular
@@ -248,7 +251,7 @@ export function KanbanWorkspaceClient({
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <label style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--muted-strong)' }}>Contato Whatsapp <span style={{ color: 'red' }}>*</span></label>
                     <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '12px', color: 'black', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      🇧🇷 +55 85 98871-8442
+                      🇧🇷 {getPhoneForCard(selectedCard.id)}
                     </div>
                   </div>
 
@@ -262,7 +265,7 @@ export function KanbanWorkspaceClient({
               </div>
 
               {/* Right Column (Sidebar widgets) */}
-              <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="modal-sidebar">
                 {/* Status Box */}
                 <div style={{ background: 'white', borderRadius: '8px', border: '1px solid var(--border)', padding: '16px' }}>
                   <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px' }}>Status</div>

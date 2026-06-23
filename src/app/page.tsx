@@ -2,7 +2,6 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { KanbanWorkspaceClient } from "../components/KanbanWorkspaceClient";
 import {
-  AlarmClock,
   ArrowRight,
   BellRing,
   Bot,
@@ -10,8 +9,6 @@ import {
   CheckCheck,
   Clock3,
   CreditCard,
-  FileText,
-  GripVertical,
   Home as HomeIcon,
   LayoutGrid,
   MessageCircle,
@@ -24,7 +21,6 @@ import {
   ShoppingCart,
   Truck,
   User,
-  UserPlus,
   Filter,
   BookOpen,
   Workflow,
