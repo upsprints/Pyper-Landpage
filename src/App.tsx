@@ -734,7 +734,7 @@ export default function Home() {
           </nav>
 
           <div className="nav-actions">
-            <a className="login-link" href={whatsappUrl}>
+            <a className="login-link" href="https://app.pyper.com.br/login" target="_blank" rel="noopener noreferrer">
               Login
             </a>
             <a className="button button-primary" href={whatsappUrl}>
