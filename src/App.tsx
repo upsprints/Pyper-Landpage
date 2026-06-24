@@ -1,10 +1,16 @@
 
-import type { ReactNode } from "react";
+import React, { ReactNode, useState, useEffect, useRef } from "react";
 import { KanbanWorkspaceClient } from "./components/KanbanWorkspaceClient";
 import {
   ArrowRight,
   BellRing,
   Bot,
+  ShieldCheck,
+  Scale,
+  FileText,
+  CheckCircle2,
+  Sparkles,
+  QrCode,
   CheckSquare,
   CheckCheck,
   Clock3,
@@ -43,6 +49,25 @@ import {
   siteConfig,
   workspaceTemplates,
 } from "@/lib/site";
+
+const Instagram = ({ size = 24, ...props }: { size?: number; [key: string]: any }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 const iconMap = {
   bell: BellRing,
@@ -190,6 +215,645 @@ const kanbanCards = [
   },
 ] as const;
 
+function TypewriterInput() {
+  const words = [
+    "Construtoras de médio porte em São Paulo",
+    "Clínicas odontológicas no Rio de Janeiro",
+    "Agências de marketing em Belo Horizonte",
+  ];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const fullText = words[currentWordIndex];
+    const typeSpeed = isDeleting ? 30 : 65;
+
+    const handleTyping = () => {
+      if (!isDeleting) {
+        setCurrentText((prev) => fullText.substring(0, prev.length + 1));
+        if (currentText === fullText) {
+          timer = setTimeout(() => setIsDeleting(true), 2500);
+          return;
+        }
+      } else {
+        setCurrentText((prev) => fullText.substring(0, prev.length - 1));
+        if (currentText === "") {
+          setIsDeleting(false);
+          setCurrentWordIndex((prev) => (prev + 1) % words.length);
+          return;
+        }
+      }
+      timer = setTimeout(handleTyping, typeSpeed);
+    };
+
+    timer = setTimeout(handleTyping, typeSpeed);
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, currentWordIndex]);
+
+  return (
+    <div className="prospect-search-input-wrapper">
+      <Search size={16} className="prospect-search-icon" aria-hidden="true" />
+      <span className="prospect-typewriter-text">
+        {currentText}
+        <span className="prospect-typewriter-cursor">|</span>
+      </span>
+    </div>
+  );
+}
+
+
+
+function ProspectInteligenteSection() {
+  const [addedLeads, setAddedLeads] = useState<string[]>([]);
+
+  const toggleLead = (id: string) => {
+    setAddedLeads((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const leads = [
+    {
+      id: "vanguard",
+      name: "Vanguard Engenharia Ltda",
+      sub: "Construção Civil • São Paulo, SP",
+      match: "98% Match",
+    },
+    {
+      id: "estrutura",
+      name: "Estrutura Forte S.A.",
+      sub: "Infraestrutura • Campinas, SP",
+      match: "92% Match",
+    },
+    {
+      id: "marmoraria",
+      name: "Marmoraria & Construções",
+      sub: "Acabamentos • São Paulo, SP",
+      match: "85% Match",
+    },
+  ];
+
+  return (
+    <section className="section prospect-inteligente-section" id="prospect-inteligente">
+      <div className="site-shell prospect-layout">
+        {/* Left Visual Card Mockup */}
+        <div className="prospect-mockup-container">
+          <div className="prospect-card-window">
+            {/* Window Header */}
+            <div className="prospect-card-header">
+              <div className="prospect-logo-badge">
+                <Sparkles size={16} className="prospect-sparkles-icon" />
+              </div>
+              <span className="prospect-header-title">Gerador de Leads IA</span>
+            </div>
+
+            {/* Typewriter Input */}
+            <TypewriterInput />
+
+            {/* Leads List */}
+            <div className="prospect-leads-list">
+              {leads.map((lead) => {
+                const isAdded = addedLeads.includes(lead.id);
+                return (
+                  <div key={lead.id} className="prospect-lead-row">
+                    <div className="prospect-lead-info">
+                      <strong className="prospect-lead-name">{lead.name}</strong>
+                      <span className="prospect-lead-sub">{lead.sub}</span>
+                    </div>
+                    <div className="prospect-lead-actions">
+                      <span className="prospect-match-badge">
+                        <CheckCircle2 size={12} className="prospect-check-icon" />
+                        {lead.match}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => toggleLead(lead.id)}
+                        className={`prospect-crm-btn ${isAdded ? "added" : ""}`}
+                      >
+                        {isAdded ? (
+                          <>
+                            <CheckCheck size={14} style={{ marginRight: 4 }} />
+                            Adicionado
+                          </>
+                        ) : (
+                          "Adicionar CRM"
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Copy Content */}
+        <div className="prospect-copy-container">
+          <p className="feature-pill">Prospect Inteligente</p>
+          <h2 className="prospect-title">Encontre seu cliente ideal em segundos com IA</h2>
+          <p className="prospect-description">
+            Defina sua persona ideal e deixe nossa IA vasculhar o mercado. Chega de listas frias
+            compradas no escuro. Gere leads qualificados que realmente precisam da sua solução.
+          </p>
+          <ul className="prospect-features-list">
+            <li>
+              <span className="bullet-circle">
+                <CheckCircle2 size={16} />
+              </span>
+              Filtros geográficos e de faturamento precisos.
+            </li>
+            <li>
+              <span className="bullet-circle">
+                <CheckCircle2 size={16} />
+              </span>
+              Matching semântico baseado em intenção de compra.
+            </li>
+            <li>
+              <span className="bullet-circle">
+                <CheckCircle2 size={16} />
+              </span>
+              Importação direta para seu funil de vendas.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InteligenciaDadosSection() {
+  return (
+    <section className="section inteligencia-dados-section" id="inteligencia-dados">
+      <div className="site-shell data-enrichment-layout">
+        {/* Left Copy Content */}
+        <div className="data-copy-container">
+          <p className="feature-pill blue">Inteligência de Dados</p>
+          <h2 className="data-title">Enriquecimento de Dados e Aquecimento de Leads</h2>
+          <p className="data-description">
+            Saiba com quem você está falando antes mesmo do primeiro "Oi". Integramos
+            nativamente com Serasa e JusBrasil para trazer segurança jurídica e financeira para
+            cada negociação.
+          </p>
+
+          <div className="integration-cards-row">
+            <div className="integration-mini-card">
+              <span className="integration-icon serasa">
+                <ShieldCheck size={20} />
+              </span>
+              <div>
+                <h4>Serasa Experian</h4>
+                <p>Score de crédito e saúde financeira em tempo real.</p>
+              </div>
+            </div>
+            <div className="integration-mini-card">
+              <span className="integration-icon jusbrasil">
+                <Scale size={20} />
+              </span>
+              <div>
+                <h4>JusBrasil</h4>
+                <p>Monitoramento de processos e histórico jurídico.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Visual Card Mockup */}
+        <div className="data-mockup-container">
+          <div className="data-enrichment-card">
+            {/* Header */}
+            <div className="data-card-header">
+              <div className="data-lead-avatar">V</div>
+              <div className="data-lead-meta">
+                <strong className="data-lead-name">Vanguard Engenharia</strong>
+                <span className="data-lead-cnpj">CNPJ: 00.123.456/0001-99</span>
+              </div>
+              <span className="data-hot-badge">LEAD QUENTE</span>
+            </div>
+
+            {/* Financial Health Section */}
+            <div className="data-card-block">
+              <div className="data-block-header">
+                <span className="data-block-title">SAÚDE FINANCEIRA (SERASA)</span>
+                <span className="data-score-value">842</span>
+              </div>
+              <div className="data-indicators-grid">
+                <div className="data-indicator">
+                  <span className="data-indicator-label">Risco de Inadimplência</span>
+                  <span className="data-indicator-value">
+                    <span className="status-dot-indicator green" /> Baixo
+                  </span>
+                </div>
+                <div className="data-indicator">
+                  <span className="data-indicator-label">Capacidade Pgto.</span>
+                  <span className="data-indicator-value">
+                    <span className="status-dot-indicator blue" /> Alta
+                  </span>
+                </div>
+                <div className="data-indicator">
+                  <span className="data-indicator-label">Protestos (12m)</span>
+                  <strong className="data-indicator-value dark">0 ocorrências</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Situation Section */}
+            <div className="data-card-block last">
+              <span className="data-block-title">SITUAÇÃO JURÍDICA (JUSBRASIL)</span>
+              <div className="data-legal-box">
+                <div className="data-legal-row">
+                  <div className="data-legal-type">
+                    <FileText size={16} className="data-legal-icon" />
+                    <span>Processos Ativos</span>
+                  </div>
+                  <strong className="data-legal-count">02</strong>
+                </div>
+                <div className="data-progress-bar-wrapper">
+                  <div className="data-progress-bar-track">
+                    <div className="data-progress-bar-fill" style={{ width: "20%" }} />
+                  </div>
+                  <div className="data-progress-labels">
+                    <span>Risco Processual Mínimo</span>
+                    <span>Certidão Negativa: Válida</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Floating Check Card */}
+            <div className="data-floating-validation">
+              <ShieldCheck size={16} className="data-validation-icon" />
+              <span>Venda Segura Liberada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturesDashboardSection() {
+  const whatsappUrl = buildWhatsAppUrl();
+  return (
+    <section className="section dashboard-overview-section" id="visao-geral">
+      <div className="site-shell hero-grid">
+        {/* Left Copy Content */}
+        <div className="hero-copy">
+          <p className="eyebrow">
+            <span className="status-dot" aria-hidden="true" />
+            {hero.eyebrow}
+          </p>
+          <h2 className="hero-title" style={{ fontSize: "clamp(30px, 3.5vw, 48px)", lineHeight: 1.15 }}>
+            {hero.title}
+          </h2>
+          <p className="hero-subtitle">{hero.subtitle}</p>
+
+          <div className="cta-row">
+            <a className="button button-primary" href={whatsappUrl}>
+              {hero.primaryCta}
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
+            <a className="button button-secondary" href="#solucoes">
+              <LayoutGrid size={18} aria-hidden="true" />
+              {hero.secondaryCta}
+            </a>
+          </div>
+
+          <div className="hero-metrics" aria-label="Resumo de benefícios">
+            {metrics.map((metric) => (
+              <div className="metric" key={metric.label}>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Product Graphic (Dashboard Mockup) */}
+        <figure className="hero-product" aria-label="Interface da Pyper">
+          <div className="hero-product-frame">
+            <img
+              className="hero-dashboard-image"
+              src={heroDashboard.src}
+              alt={heroDashboard.alt}
+              width={heroDashboard.width}
+              height={heroDashboard.height}
+              sizes="(max-width: 980px) 100vw, 68vw"
+            />
+          </div>
+          <figcaption className="hero-floating-card">
+            <span>AI Agent</span>
+            <strong>Lead qualificado automaticamente</strong>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  );
+}
+
+function useCountUp(target: number, duration = 1800, active = false) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!active) return;
+    setCount(0);
+    let startTime: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // easeOutExpo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [active, target, duration]);
+
+  return count;
+}
+
+function AnimatedStat({ value, suffix, label }: { value: number; suffix?: string; label: string }) {
+  const [active, setActive] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setActive(true); observer.disconnect(); } },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const count = useCountUp(value, 1800, active);
+
+  const formatted = count >= 1000
+    ? (count / 1000).toFixed(count >= 10000 ? 1 : 1) + "k"
+    : count.toString();
+
+  return (
+    <span ref={ref}>
+      <strong className="stat-number">{formatted}{suffix}</strong> {label}
+    </span>
+  );
+}
+
+function InstagramSocialSection() {
+  const profileUrl = "https://www.instagram.com/pyper_crm";
+
+  const posts = [
+    {
+      src: "/instagram-post-1.png",
+      likes: 142,
+      comments: 18,
+      link: profileUrl,
+      alt: "Automação de processos comerciais e funil de vendas no Pyper",
+    },
+    {
+      src: "/instagram-post-2.png",
+      likes: 189,
+      comments: 24,
+      link: profileUrl,
+      alt: "Atendimento automático 24/7 com Agente de Inteligência Artificial no WhatsApp",
+    },
+    {
+      src: "/instagram-post-3.png",
+      likes: 156,
+      comments: 14,
+      link: profileUrl,
+      alt: "Conexão simples e rápida Plug & Play via QR Code na plataforma Pyper",
+    },
+  ];
+
+  return (
+    <section className="section instagram-social-section" id="social">
+      <div className="site-shell">
+        <div className="section-heading text-center" style={{ textAlign: "center", marginBottom: "40px" }}>
+          <p className="section-kicker">Redes Sociais</p>
+          <h2 className="section-title">Acompanhe a Pyper no Instagram</h2>
+          <p className="section-copy" style={{ maxWidth: "600px", margin: "12px auto 0" }}>
+            Fique por dentro das novidades, dicas de automação de vendas e atualizações de produtos em nosso perfil oficial.
+          </p>
+        </div>
+
+        {/* Instagram Profile Card */}
+        <div className="instagram-profile-card">
+          <div className="profile-info">
+            <div className="profile-avatar">
+              <img src="/logo-pyper-official.png" alt="Pyper CRM" />
+            </div>
+            <div className="profile-meta">
+              <div className="profile-handle-row">
+                <h3 className="profile-handle">pyper_crm</h3>
+                <span className="verified-badge" title="Conta Oficial">✓</span>
+              </div>
+              <p className="profile-name">Pyper | CRM & IA no WhatsApp</p>
+              <div className="profile-stats">
+                <AnimatedStat value={1200} label="publicações" />
+                <AnimatedStat value={12400} label="seguidores" />
+                <AnimatedStat value={342} label="seguindo" />
+              </div>
+              <p className="profile-bio">
+                🚀 Automatize suas vendas e seu atendimento. <br />
+                💬 CRM + WhatsApp + Agente de IA em um só lugar. <br />
+                👉 Comece em minutos.
+              </p>
+              <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="profile-link">
+                pyper.com.br
+              </a>
+            </div>
+          </div>
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button button-primary follow-btn"
+          >
+            <Instagram size={16} style={{ marginRight: "8px" }} />
+            Seguir
+          </a>
+        </div>
+
+        {/* Instagram Posts Grid */}
+        <div className="instagram-posts-grid">
+          {posts.map((post, idx) => (
+            <a
+              key={idx}
+              href={post.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="instagram-post-item"
+              aria-label={`Ver publicação do Instagram: ${post.alt}`}
+            >
+              <img src={post.src} alt={post.alt} className="post-image" />
+              <div className="post-overlay">
+                <span className="overlay-stat">
+                  ❤️ {post.likes}
+                </span>
+                <span className="overlay-stat">
+                  💬 {post.comments}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MascotFollower() {
+  const whatsappUrl = buildWhatsAppUrl(
+    "Olá! Vi o mascote da Pyper e quero aproveitar a oferta especial com termos e condições exclusivos! 🎉"
+  );
+  const [pos, setPos] = useState({ x: -200, y: 300 });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+
+  const targetRef = useRef({ x: typeof window !== "undefined" ? window.innerWidth / 2 : 400, y: 300 });
+  const currentRef = useRef({ x: -200, y: 300 });
+  const rafRef = useRef<number>(0);
+  const prevRef = useRef({ x: -200, y: 300 });
+  const rotRef = useRef(0);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      targetRef.current = { x: e.clientX, y: e.clientY };
+    };
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) targetRef.current = { x: t.clientX, y: t.clientY };
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("touchmove", onTouch, { passive: true });
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const animate = () => {
+      const speed = 0.045;
+      currentRef.current.x = lerp(currentRef.current.x, targetRef.current.x, speed);
+      currentRef.current.y = lerp(currentRef.current.y, targetRef.current.y, speed);
+
+      const dx = currentRef.current.x - prevRef.current.x;
+      const targetRot = Math.max(-20, Math.min(20, dx * 3));
+      rotRef.current = lerp(rotRef.current, targetRot, 0.1);
+
+      prevRef.current = { ...currentRef.current };
+      setPos({ x: Math.round(currentRef.current.x), y: Math.round(currentRef.current.y) });
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!modalOpen) { setCountdown(10); return; }
+    setCountdown(10);
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) { clearInterval(interval); setModalOpen(false); return 10; }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [modalOpen]);
+
+  const handleMascotClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setModalOpen(true);
+  };
+
+  const urgencyColor = countdown <= 3 ? "#d64040" : countdown <= 6 ? "#b66b00" : "#006d3d";
+
+  return (
+    <>
+      {/* Floating Mascot */}
+      <div
+        className="mascot-follower"
+        style={{
+          transform: `translate(${pos.x - 35}px, ${pos.y - 35}px) rotate(${rotRef.current}deg)`,
+        }}
+        onClick={handleMascotClick}
+        onTouchEnd={(e) => { e.preventDefault(); handleMascotClick(e); }}
+        role="button"
+        aria-label="Clique no mascote para uma oferta especial"
+        tabIndex={0}
+      >
+        <img src="/pyper.png" alt="Mascote Pyper" className="mascot-img" draggable={false} />
+        <span className="mascot-hint">Clique em mim! 👆</span>
+      </div>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div
+          className="mascot-modal-overlay"
+          onClick={() => setModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Oferta especial"
+        >
+          <div className="mascot-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="mascot-modal-close"
+              onClick={() => setModalOpen(false)}
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+
+            <div className="mascot-modal-avatar">
+              <img src="/pyper.png" alt="Mascote Pyper" />
+            </div>
+
+            <div
+              className="mascot-countdown-ring"
+              style={{ "--countdown-color": urgencyColor } as React.CSSProperties}
+            >
+              <span className="countdown-number" style={{ color: urgencyColor }}>
+                {countdown}
+              </span>
+            </div>
+
+            <h3 className="mascot-modal-title">🎉 Parabéns, você foi escolhido!</h3>
+            <p className="mascot-modal-body">
+              Você tem{" "}
+              <strong style={{ color: urgencyColor }}>{countdown} segundo{countdown !== 1 ? "s" : ""}</strong>{" "}
+              para falar com nossos especialistas e garantir{" "}
+              <strong>termos e condições exclusivos</strong> para sua empresa!
+            </p>
+            <p className="mascot-modal-sub">
+              ⚡ Oferta válida apenas por essa sessão. Não perca!
+            </p>
+
+            <a
+              href={whatsappUrl}
+              className="button button-primary mascot-cta-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setModalOpen(false)}
+            >
+              💬 Falar com Especialista Agora
+            </a>
+
+            <p className="mascot-modal-terms">
+              Ao clicar, você será direcionado ao WhatsApp da nossa equipe.
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function Home() {
   const whatsappUrl = buildWhatsAppUrl();
   const jsonLd = JSON.stringify(jsonLdGraph).replace(/</g, "\\u003c");
@@ -219,6 +883,7 @@ export default function Home() {
             <a href="#funcionalidades">Funcionalidades</a>
             <a href="#auto-implantacao">Auto Implantação</a>
             <a href="#faq">FAQ</a>
+            <a href="#social">Instagram</a>
           </nav>
 
           <div className="nav-actions">
@@ -253,57 +918,159 @@ export default function Home() {
 
       <main className="page-main">
         <section className="hero" id="inicio">
-          <div className="site-shell hero-grid">
-            <div className="hero-copy">
+          <div className="site-shell hero-grid setup-layout">
+            {/* Left Visual Setup Collage Mockup */}
+            <div className="setup-mockup-container">
+              <div className="setup-collage-backdrop" />
+              
+              <div className="setup-collage-wrapper">
+                
+                {/* Left Layer: Stats / Conversion Card */}
+                <div className="collage-card stats-card">
+                  <span className="stats-kicker">Conversão de Leads</span>
+                  <strong className="stats-value">+142%</strong>
+                  <div className="mini-chart">
+                    <span className="bar" style={{ height: "40%" }} />
+                    <span className="bar" style={{ height: "65%" }} />
+                    <span className="bar active" style={{ height: "90%" }} />
+                  </div>
+                </div>
+
+                {/* Center Layer: Lead Table Board */}
+                <div className="collage-card board-card">
+                  <header className="board-header">
+                    <span className="board-dot" />
+                    <span className="board-title">Atendimentos Recentes</span>
+                  </header>
+                  <div className="board-table">
+                    <div className="board-row header">
+                      <span>Lead</span>
+                      <span>Canal</span>
+                      <span>Status</span>
+                    </div>
+                    <div className="board-row">
+                      <div className="board-lead-cell">
+                        <span className="avatar-small gray">MS</span>
+                        <strong>Mariana Silva</strong>
+                      </div>
+                      <span className="board-channel-badge">WhatsApp</span>
+                      <span className="status-pill green">Resolvido</span>
+                    </div>
+                    <div className="board-row">
+                      <div className="board-lead-cell">
+                        <span className="avatar-small blue">VE</span>
+                        <strong>Vanguard Eng.</strong>
+                      </div>
+                      <span className="board-channel-badge">WhatsApp</span>
+                      <span className="status-pill orange">Em andamento</span>
+                    </div>
+                    <div className="board-row">
+                      <div className="board-lead-cell">
+                        <span className="avatar-small purple">EF</span>
+                        <strong>Estrutura Forte</strong>
+                      </div>
+                      <span className="board-channel-badge">WhatsApp</span>
+                      <span className="status-pill green">Resolvido</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Layer: Automation Recipe Card */}
+                <div className="collage-card automation-card">
+                  <header className="automation-header">
+                    <Zap size={14} className="automation-bolt-icon" />
+                    <span>Automação Ativa</span>
+                  </header>
+                  <p className="automation-recipe">
+                    Quando <strong>Mensagem Recebida</strong>, responder com <strong>Agente de IA</strong>.
+                  </p>
+                  <div className="automation-footer">
+                    <span className="status-active-tag">
+                      <span className="pulse-green-dot" />
+                      Ativo 24h
+                    </span>
+                  </div>
+                </div>
+
+                {/* Floating Integrations */}
+                <div className="floating-integrations">
+                  <div className="integration-bubble wpp">
+                    <MessageCircle size={16} />
+                  </div>
+                  <div className="integration-bubble stripe">
+                    <CreditCard size={16} />
+                  </div>
+                  <div className="integration-bubble gmail">
+                    <Send size={14} />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Right Copy Content */}
+            <div className="setup-copy-container hero-copy">
               <p className="eyebrow">
                 <span className="status-dot" aria-hidden="true" />
-                {hero.eyebrow}
+                Plug & Play
               </p>
-              <h1 className="hero-title">{hero.title}</h1>
-              <p className="hero-subtitle">{hero.subtitle}</p>
+              <h1 className="hero-title">
+                Seu negócio funcionando 24h.
+                <br />
+                <span>Configurado em minutos.</span>
+              </h1>
+              <p className="hero-subtitle">
+                Conecte seu WhatsApp escaneando um QR Code, ative o agente de IA para sua empresa e defina
+                seu funil comercial em poucos cliques. Sem código, sem estresse.
+              </p>
 
               <div className="cta-row">
                 <a className="button button-primary" href={whatsappUrl}>
-                  {hero.primaryCta}
+                  Agendar demonstração
                   <ArrowRight size={18} aria-hidden="true" />
                 </a>
                 <a className="button button-secondary" href="#solucoes">
                   <LayoutGrid size={18} aria-hidden="true" />
-                  {hero.secondaryCta}
+                  Ver como funciona
                 </a>
               </div>
 
-              <div className="hero-metrics" aria-label="Resumo de benefícios">
-                {metrics.map((metric) => (
-                  <div className="metric" key={metric.label}>
-                    <strong>{metric.value}</strong>
-                    <span>{metric.label}</span>
+              <div className="setup-advantages hero-advantages" style={{ marginTop: "28px" }}>
+                <div className="advantage-row">
+                  <span className="advantage-icon">
+                    <QrCode size={16} />
+                  </span>
+                  <div>
+                    <strong>Conexão Plug & Play</strong>
+                    <p>Escaneie o QR Code e comece. Sem burocracia ou APIs complexas.</p>
                   </div>
-                ))}
+                </div>
+
+                <div className="advantage-row">
+                  <span className="advantage-icon">
+                    <Clock3 size={16} />
+                  </span>
+                  <div>
+                    <strong>Operação 24 Horas por Dia</strong>
+                    <p>IA que atende na hora, qualifica leads e agenda reuniões.</p>
+                  </div>
+                </div>
+
+                <div className="advantage-row">
+                  <span className="advantage-icon">
+                    <LayoutGrid size={16} />
+                  </span>
+                  <div>
+                    <strong>Automação Sem Código</strong>
+                    <p>Crie fluxos de atendimento de forma visual e simples.</p>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <figure className="hero-product" aria-label="Interface da Pyper">
-              <div className="hero-product-frame">
-                <img
-                  className="hero-dashboard-image"
-                  src={heroDashboard.src}
-                  alt={heroDashboard.alt}
-                  width={heroDashboard.width}
-                  height={heroDashboard.height}
-                  
-                  
-                  
-                  sizes="(max-width: 980px) 100vw, 68vw"
-                />
-              </div>
-              <figcaption className="hero-floating-card">
-                <span>AI Agent</span>
-                <strong>Lead qualificado automaticamente</strong>
-              </figcaption>
-            </figure>
           </div>
         </section>
+
+        <FeaturesDashboardSection />
 
         <section className="section section-muted">
           <div className="site-shell">
@@ -349,6 +1116,10 @@ export default function Home() {
             <WorkspaceBuilderMockup />
           </div>
         </section>
+
+        <ProspectInteligenteSection />
+
+        <InteligenciaDadosSection />
 
         <section className="section solution-section" id="solucoes">
           <div className="site-shell">
@@ -444,6 +1215,8 @@ export default function Home() {
           </div>
         </section>
 
+        <InstagramSocialSection />
+
         <section className="section final-cta">
           <div className="site-shell">
             <div className="final-card">
@@ -496,6 +1269,14 @@ export default function Home() {
             <a href="#funcionalidades">Funcionalidades</a>
             <a href="#faq">FAQ</a>
             <a href={whatsappUrl}>WhatsApp</a>
+            <a
+              href="https://www.instagram.com/pyper_crm"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <Instagram size={14} /> Instagram
+            </a>
           </nav>
         </div>
       </footer>
@@ -507,6 +1288,8 @@ export default function Home() {
       >
         <MessageCircle size={24} aria-hidden="true" />
       </a>
+
+      <MascotFollower />
     </>
   );
 }

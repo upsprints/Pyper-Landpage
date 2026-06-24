@@ -14,7 +14,7 @@ export const siteConfig = {
   },
 } as const;
 
-export function buildWhatsAppUrl(message = siteConfig.whatsappMessage) {
+export function buildWhatsAppUrl(message: string = siteConfig.whatsappMessage) {
   return `https://wa.me/${siteConfig.whatsappPhone}?text=${encodeURIComponent(message)}`;
 }
 
@@ -35,27 +35,24 @@ export const heroDashboard = {
 } as const;
 
 export const siteMetadata = {
-  title: "Pyper | CRM com IA, WhatsApp e Automação Comercial",
+  title: "Pyper | CRM com WhatsApp, Inteligência Artificial e Automação",
   description:
-    "Automatize seu atendimento com CRM, agentes de IA, WhatsApp e gestão de processos. Organize leads, reduza tarefas manuais e venda mais com a Pyper.",
+    "Conheça o melhor CRM integrado com WhatsApp e Inteligência Artificial. Automatize o atendimento comercial, qualifique e enriqueça leads 24h por dia e multiplique suas vendas.",
   keywords: [
-    "CRM com IA",
     "CRM com WhatsApp",
-    "agente de IA para WhatsApp",
-    "automação de atendimento",
-    "automação comercial",
-    "gestão de leads",
-    "funil de vendas",
-    "sistema de atendimento",
-    "atendimento automatizado",
-    "CRM para pequenas empresas",
-    "gestão de processos comerciais",
-    "automação de processos",
+    "CRM integrado com WhatsApp",
+    "melhor CRM para WhatsApp",
+    "chatbot IA para WhatsApp",
+    "automação de vendas no WhatsApp",
+    "qualificação de leads automática",
+    "enriquecimento de dados leads",
+    "CRM com IA",
+    "automação comercial Brasil",
   ],
-  openGraphTitle: "Pyper | CRM com IA e WhatsApp",
+  openGraphTitle: "Pyper | CRM com WhatsApp, Inteligência Artificial e Automação",
   openGraphDescription:
-    "Centralize atendimentos, organize leads e automatize processos comerciais com agentes de IA integrados ao WhatsApp.",
-  imageAlt: "Dashboard da Pyper com CRM, WhatsApp e agentes de IA",
+    "O melhor CRM integrado com WhatsApp e Inteligência Artificial. Automatize atendimentos, enriqueça dados de leads e venda 24h por dia com a Pyper.",
+  imageAlt: "Dashboard da Pyper com CRM integrado ao WhatsApp e agentes de IA",
 } as const satisfies {
   title: string;
   description: string;
