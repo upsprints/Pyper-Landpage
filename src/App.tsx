@@ -543,7 +543,6 @@ function FeaturesDashboardSection() {
             />
           </div>
           <figcaption className="hero-floating-card">
-            <span>AI Agent</span>
             <strong>Lead qualificado automaticamente</strong>
           </figcaption>
         </figure>
@@ -733,7 +732,7 @@ function MascotFollower() {
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
     const animate = () => {
-      const speed = 0.045;
+      const speed = 0.018;
       currentRef.current.x = lerp(currentRef.current.x, targetRef.current.x, speed);
       currentRef.current.y = lerp(currentRef.current.y, targetRef.current.y, speed);
 
@@ -883,7 +882,7 @@ export default function Home() {
             <a href="#funcionalidades">Funcionalidades</a>
             <a href="#auto-implantacao">Auto Implantação</a>
             <a href="#faq">FAQ</a>
-            <a href="#social">Instagram</a>
+            <a href="https://www.instagram.com/pyper_crm" target="_blank" rel="noopener noreferrer">Instagram</a>
           </nav>
 
           <div className="nav-actions">
@@ -1010,10 +1009,6 @@ export default function Home() {
 
             {/* Right Copy Content */}
             <div className="setup-copy-container hero-copy">
-              <p className="eyebrow">
-                <span className="status-dot" aria-hidden="true" />
-                Plug & Play
-              </p>
               <h1 className="hero-title">
                 Seu negócio funcionando 24h.
                 <br />
@@ -1214,8 +1209,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <InstagramSocialSection />
 
         <section className="section final-cta">
           <div className="site-shell">
